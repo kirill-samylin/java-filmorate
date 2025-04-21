@@ -26,7 +26,8 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) { validateUser(user);
+    public User updateUser(@RequestBody User user) {
+        validateUser(user);
         if (!users.containsKey(user.getId())) {
             String message = "Пользователь с id=" + user.getId() + " не найден.";
             log.warn(message);
@@ -36,10 +37,12 @@ public class UserController {
         log.info("Пользователь обновлён: {}", user);
         return user;
     }
+
     @GetMapping
     public Collection<User> getAllUsers() {
         return users.values();
     }
+
     private void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             String error = "Недопустимый email";
