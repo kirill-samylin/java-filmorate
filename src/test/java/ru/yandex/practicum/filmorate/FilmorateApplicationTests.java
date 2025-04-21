@@ -24,12 +24,9 @@ class FilmorateApplicationTests {
 
 	@Test
 	void contextLoads() {
-		// проверка запуска контекста — ничего не делает
 		assertNotNull(filmController);
 		assertNotNull(userController);
 	}
-
-	// === Тесты для Film ===
 
 	@Test
 	void addValidFilmShouldSucceed() {
@@ -79,8 +76,6 @@ class FilmorateApplicationTests {
 		assertEquals("Продолжительность фильма должна быть положительной", ex.getMessage());
 	}
 
-	// === Тесты для User ===
-
 	@Test
 	void createUserWithValidDataShouldSucceed() {
 		User user = new User();
@@ -102,6 +97,7 @@ class FilmorateApplicationTests {
 		ValidationException ex = assertThrows(ValidationException.class, () -> userController.createUser(user));
 		assertEquals("Логин не может быть пустым или содержать пробелы", ex.getMessage());
 	}
+
 	@Test
 	void createUserWithEmailWithoutAtSymbolShouldFail() {
 		User user = new User();
@@ -111,6 +107,7 @@ class FilmorateApplicationTests {
 		ValidationException ex = assertThrows(ValidationException.class, () -> userController.createUser(user));
 		assertEquals("Недопустимый email", ex.getMessage());
 	}
+
 	@Test
 	void createUserWithFutureBirthdayShouldFail() {
 		User user = new User();
@@ -120,6 +117,7 @@ class FilmorateApplicationTests {
 		ValidationException ex = assertThrows(ValidationException.class, () -> userController.createUser(user));
 		assertEquals("Дата рождения не может быть в будущем", ex.getMessage());
 	}
+
 	@Test
 	void createUserWithEmptyNameShouldUseLoginAsName() {
 		User user = new User();
