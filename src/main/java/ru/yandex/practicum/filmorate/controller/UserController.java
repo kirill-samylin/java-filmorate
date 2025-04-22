@@ -18,7 +18,7 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody User user) {
-        validateUser(user);
+        validateUserForCreate(user);
         user.setId(nextId++);
         users.put(user.getId(), user);
         log.info("Создан пользователь: {}", user);
@@ -27,23 +27,51 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@RequestBody User user) {
-        validateUser(user);
         if (!users.containsKey(user.getId())) {
-            String message = "Пользователь с id=" + user.getId() + " не найден.";
+            String message = String.format("Пользователь с id=%s не найден.", user.getId());
             log.warn(message);
             throw new NoSuchElementException(message);
         }
-        users.put(user.getId(), user);
-        log.info("Пользователь обновлён: {}", user);
-        return user;
+
+        User existingUser = users.get(user.getId());
+
+        // Обновим только те поля, которые были переданы
+        if (user.getEmail() != null) {
+            validateEmail(user.getEmail());
+            existingUser.setEmail(user.getEmail());
+        }
+
+        if (user.getLogin() != null) {
+            validateLogin(user.getLogin());
+            existingUser.setLogin(user.getLogin());
+        }
+
+        if (user.getName() != null) {
+            existingUser.setName(user.getName());
+        }
+
+        if (user.getBirthday() != null) {
+            validateBirthday(user.getBirthday());
+            existingUser.setBirthday(user.getBirthday());
+        }
+
+        // Если имя остаётся пустым, используем логин
+        if (existingUser.getName() == null || existingUser.getName().isBlank()) {
+            existingUser.setName(existingUser.getLogin());
+            log.info("Отображаемое имя не задано. Использован логин вместо имени: {}", existingUser.getLogin());
+        }
+
+        log.info("Пользователь обновлён: {}", existingUser);
+        return existingUser;
     }
+
 
     @GetMapping
     public Collection<User> getAllUsers() {
         return users.values();
     }
 
-    private void validateUser(User user) {
+    private void validateUserForCreate(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             String error = "Недопустимый email";
             log.warn("Ошибка валидации: {}", error);
@@ -62,6 +90,30 @@ public class UserController {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
             log.info("Отображаемое имя не задано. Использован логин вместо имени: {}", user.getLogin());
+        }
+    }
+
+    private void validateEmail(String email) {
+        if (email.isBlank() || !email.contains("@")) {
+            String error = "Недопустимый email";
+            log.warn("Ошибка валидации: {}", error);
+            throw new ValidationException(error);
+        }
+    }
+
+    private void validateLogin(String login) {
+        if (login.isBlank() || login.contains(" ")) {
+            String error = "Логин не может быть пустым или содержать пробелы";
+            log.warn("Ошибка валидации: {}", error);
+            throw new ValidationException(error);
+        }
+    }
+
+    private void validateBirthday(LocalDate birthday) {
+        if (birthday.isAfter(LocalDate.now())) {
+            String error = "Дата рождения не может быть в будущем";
+            log.warn("Ошибка валидации: {}", error);
+            throw new ValidationException(error);
         }
     }
 }
