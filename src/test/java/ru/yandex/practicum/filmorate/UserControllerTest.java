@@ -103,12 +103,12 @@ public class UserControllerTest {
         // user1 получает список друзей
         List<User> friends1 = userController.getFriends(user1.getId());
         assertEquals(1, friends1.size());
-        assertEquals(user2.getId(), friends1.get(0).getId());
+        assertEquals(user2.getId(), friends1.getFirst().getId());
 
         // user2 получает список друзей (взаимная дружба)
         List<User> friends2 = userController.getFriends(user2.getId());
         assertEquals(1, friends2.size());
-        assertEquals(user1.getId(), friends2.get(0).getId());
+        assertEquals(user1.getId(), friends2.getFirst().getId());
     }
 
     @Test
@@ -172,7 +172,7 @@ public class UserControllerTest {
 
         List<User> common = userController.getCommonFriends(user1.getId(), user2.getId());
         assertEquals(1, common.size());
-        assertEquals(user3.getId(), common.get(0).getId());
+        assertEquals(user3.getId(), common.getFirst().getId());
     }
 
     @Test
