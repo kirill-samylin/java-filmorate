@@ -12,8 +12,6 @@ public class UserController {
 
     private final UserService userService;
 
-    private final Map<Integer, User> users = new HashMap<>();
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
