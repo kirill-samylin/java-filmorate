@@ -105,8 +105,8 @@ public class FilmControllerTest {
         List<Film> popular = filmController.getPopularFilms(10);
 
         assertEquals(1, popular.size());
-        assertEquals(addedFilm.getId(), popular.get(0).getId());
-        assertTrue(popular.get(0).getLikes().contains(addedUser.getId()));
+        assertEquals(addedFilm.getId(), popular.getFirst().getId());
+        assertTrue(popular.getFirst().getLikes().contains(addedUser.getId()));
     }
 
     @Test
@@ -129,11 +129,11 @@ public class FilmControllerTest {
 
         // Лайк
         filmController.addLike(addedFilm.getId(), addedUser.getId());
-        assertTrue(filmController.getPopularFilms(10).get(0).getLikes().contains(addedUser.getId()));
+        assertTrue(filmController.getPopularFilms(10).getFirst().getLikes().contains(addedUser.getId()));
 
         // Удаление лайка
         filmController.removeLike(addedFilm.getId(), addedUser.getId());
-        Film updated = filmController.getPopularFilms(10).get(0);
+        Film updated = filmController.getPopularFilms(10).getFirst();
         assertFalse(updated.getLikes().contains(addedUser.getId()));
     }
 
