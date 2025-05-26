@@ -34,7 +34,11 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUserById(Long id) {
-        return users.get(id);
+        User user = users.get(id);
+        if (user == null) {
+            throw new NoSuchElementException("Пользователь с id " + id + " не найден");
+        }
+        return user;
     }
 
     @Override

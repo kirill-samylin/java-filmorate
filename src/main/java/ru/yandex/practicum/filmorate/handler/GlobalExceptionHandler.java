@@ -8,13 +8,12 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // Ошибка валидации — 400
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public ErrorResponse handleValidationException(ValidationException ex) {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
@@ -26,7 +25,6 @@ public class GlobalExceptionHandler {
     // Объект не найден — 404
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
     public ErrorResponse handleNotFoundException(NoSuchElementException ex) {
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
@@ -38,7 +36,6 @@ public class GlobalExceptionHandler {
     // Ошибка подстановки аргумента — 400 (например, если передали текст вместо ID)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public ErrorResponse handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
@@ -50,7 +47,6 @@ public class GlobalExceptionHandler {
     // Внутренние ошибки — 500
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
     public ErrorResponse handleGeneralException(Exception ex) {
         return new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),

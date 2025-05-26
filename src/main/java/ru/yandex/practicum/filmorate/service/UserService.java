@@ -64,11 +64,7 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        User user = userStorage.getUserById(userId);
-        if (user == null) {
-            throw new NoSuchElementException("Пользователь с id " + userId + " не найден");
-        }
-        return user;
+        return userStorage.getUserById(userId);
     }
 
     public Collection<User> getAllUsers() {
